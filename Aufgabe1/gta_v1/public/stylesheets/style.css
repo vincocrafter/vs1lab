@@ -111,6 +111,9 @@ a {
 
 /* ... your code here ... */
 
+.header__image {
+  border: #0078e7 10px solid;
+}
 
 /* ### TODO ### Styles for Main Component */
 
