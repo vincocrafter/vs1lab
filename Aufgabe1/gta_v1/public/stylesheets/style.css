@@ -58,6 +58,14 @@ a {
   flex: 1;
 }
 
+.test {
+  background-color: red;
+}
+
+.test2 {
+  background-color: blue;
+}
+
 .col-1 {
   width: calc(8.33% - 1rem);
 }
@@ -111,6 +119,14 @@ a {
 
 /* ... your code here ... */
 
+.header {
+  background-color: lightgray;
+  padding-bottom: calc(5% - 1rem);
+}
+
+.header__navigation {
+  padding-top: calc(3.5% - 1rem);
+}
 
 /* ### TODO ### Styles for Main Component */
 

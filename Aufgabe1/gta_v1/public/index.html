@@ -14,17 +14,16 @@
 
 <body>
     <header class="header">
-        <div class="row col-1">
-            <img src="./images/location.png" class="header__image col-12" alt="an image of a map and location">
+        <div class="row">
+            <img src="./images/location.png" class="header__image col-1" alt="an image of a map and location">
+            <h1 class="header__title">GeoTagApp</h1>
+            <nav class="header__navigation col-3">
+                <a href="#">About</a> | <a href="#">Help</a> | <a href="/">Home</a>
+            </nav>
         </div>
-
-        <h1 class="header__title">GeoTagApp</h1>
-        <nav class="header__navigation">
-             <a href="#">About</a> | <a href="#">Help</a> | <a href="/">Home</a>
-        </nav>
     </header>
 
-    <main class="main row">
+    <main class="main">
         <div class="row">
             <section class="main__tagging tagging">
                 <h2>Tagging</h2>
@@ -38,34 +37,38 @@
                 <!-- ############### VS1Lab 1a Form 1 End -->
 
             </section>
+
+            <section class="main__discovery discovery">
+                <h2 class="discovery__title">Discovery</h2>
+
+                <!-- ############### VS1Lab 1a Form 2 Start -->
+                <form class="discovery__search" id="discoveryFilterForm" action="/discovery" method="post">
+
+                    <!-- ... your code here ... -->
+
+                </form>
+                <!-- ############### VS1Lab 1a Form 2 End -->
+
+                <div class="discovery__wrapper">
+                    <div class="discovery__taglist">
+                        <ul class="discovery__results" id="discoveryResults">
+                            <li>Castle (49.01379, 8.404435) #sight</li>
+                            <li>IWI (49.01379, 8.390071) #edu</li>
+                        </ul>
+                    </div>
+
+                    <div id="map" class="discovery__map">
+                        <img src="./images/mapview.jpg" alt="a map with locations" id="mapView" />
+                        <span class="row">Result map</span>
+                    </div>
+                </div>
+            </section>
         </div>
 
 
-        <section class="main__discovery discovery col-12">
-            <h2 class="discovery__title">Discovery</h2>
 
-            <!-- ############### VS1Lab 1a Form 2 Start -->
-            <form class="discovery__search" id="discoveryFilterForm" action="/discovery" method="post">
 
-                <!-- ... your code here ... -->
 
-            </form>
-            <!-- ############### VS1Lab 1a Form 2 End -->
-
-            <div class="discovery__wrapper">
-                <div class="discovery__taglist">
-                    <ul class="discovery__results" id="discoveryResults">
-                        <li>Castle (49.01379, 8.404435) #sight</li>
-                        <li>IWI (49.01379, 8.390071) #edu</li>
-                    </ul>
-                </div>
-
-                <div id="map" class="discovery__map">
-                    <img src="./images/mapview.jpg" alt="a map with locations" id="mapView" />
-                    <span>Result map</span>
-                </div>
-            </div>
-        </section>
 
     </main>
 
