@@ -58,14 +58,6 @@ a {
   flex: 1;
 }
 
-.test {
-  background-color: red;
-}
-
-.test2 {
-  background-color: blue;
-}
-
 .col-1 {
   width: calc(8.33% - 1rem);
 }
@@ -137,16 +129,44 @@ a {
 
 /* ... your code here ... */
 
+.main__tagging {
+
+}
+
+.tag-form {
+
+}
+
+
 
 /* ### TODO ### Styles for Discovery component */
 
 /* ... your code here ... */
 
+.main__discovery {
+
+}
+
+.discovery__wrapper {
+
+}
+
+.discovery__taglist {
+
+}
+
+.discovery__map {
+
+}
 
 /* ### TODO ### Styles for Footer Component */
 
 /* ... your code here ... */
 
+.footer {
+  padding-top: calc(2% - 1rem);
+  background-color: lightgray;
+}
 
 /* ### TODO ### Media Queries */
 
