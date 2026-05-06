@@ -82,8 +82,9 @@ class LocationHelper {
         geoLocationApi.getCurrentPosition((location) => {
             // Create and initialize LocationHelper object.
             let helper = new LocationHelper(location.coords.latitude, location.coords.longitude);
+            let mapManager = new MapManager();
             // Pass the locationHelper object to the callback.
-            callback(helper);
+            callback(helper, mapManager);
         }, (error) => {
             alert(error.message)
         });
@@ -137,15 +138,23 @@ class MapManager {
 
 function updateLocation() {
     // Position via findLocation auslesen 
-    LocationHelper.findLocation((locationHelper) => {
+    LocationHelper.findLocation((locationHelper, mapManager) => {
         // Wird dann ausgeführt sobald Location bekannt ist
         // LocationHelper hat dann diese 2 Werte, die in die jeweiligen Felder der HTML-Seite eingetragen werden können
+        var lat = locationHelper.latitude;
+        var long = locationHelper.longitude;
 
-        document.getElementById("tagLatitude").value = locationHelper.latitude;
-        document.getElementById("tagLongitude").value = locationHelper.longitude;
+        document.getElementById("tagLatitude").value = lat;
+        document.getElementById("tagLongitude").value = long;
 
-        document.getElementById("discoveryLatitude").value = locationHelper.latitude;
-        document.getElementById("discoveryLongitude").value = locationHelper.longitude;
+        document.getElementById("discoveryLatitude").value = lat;
+        document.getElementById("discoveryLongitude").value = long;
+
+        mapManager.initMap(lat, long);
+        mapManager.updateMarkers(lat, long);
+
+        document.getElementById("mapView").remove();
+        document.getElementById("map").querySelector("span").remove();
     });
 }
 
