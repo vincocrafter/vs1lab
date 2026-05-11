@@ -82,9 +82,9 @@ class LocationHelper {
         geoLocationApi.getCurrentPosition((location) => {
             // Create and initialize LocationHelper object.
             let helper = new LocationHelper(location.coords.latitude, location.coords.longitude);
-            let mapManager = new MapManager();
+
             // Pass the locationHelper object to the callback.
-            callback(helper, mapManager);
+            callback(helper);
         }, (error) => {
             alert(error.message)
         });
@@ -138,11 +138,12 @@ class MapManager {
 
 function updateLocation() {
     // Position via findLocation auslesen 
-    LocationHelper.findLocation((locationHelper, mapManager) => {
+    LocationHelper.findLocation((locationHelper) => {
         // Wird dann ausgeführt sobald Location bekannt ist
         // LocationHelper hat dann diese 2 Werte, die in die jeweiligen Felder der HTML-Seite eingetragen werden können
         var lat = locationHelper.latitude;
         var long = locationHelper.longitude;
+        let mapManager = new MapManager();
 
         document.getElementById("tagLatitude").value = lat;
         document.getElementById("tagLongitude").value = long;
