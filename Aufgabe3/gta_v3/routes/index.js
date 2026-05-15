@@ -51,9 +51,10 @@ GeoTagExamples.tagList.forEach(([name, latitude, longitude, hashtag]) => {
  * As response, the ejs-template is rendered without geotag objects.
  */
 
-// TODO: extend the following route example if necessary
 router.get('/', (req, res) => {
-  res.render('index', { taglist: [] })
+  res.render('index', {
+    taglist: [], latitude: 49.01158, longitude: 8.39343 // Standardwerte
+  });
 });
 
 /**
@@ -71,18 +72,22 @@ router.get('/', (req, res) => {
  * by radius around a given location.
  */
 
-// TODO: ... your code here ...
 
 router.post('/tagging', (req, res) => {
   var name = req.body.has("name") ? req.body.get("name") : "";
-  var latitude = req.body.has("latitude") ? req.body.get("latitude") : "";
-  var longitude = req.body.has("longitude") ? req.body.get("longitude") : "";
+  var latitude = req.body.has("latitude") ?
+      (parseFloat(req.body.get("latitude"))).toFixed(5) : 49.01158;
+  var longitude = req.body.has("longitude") ?
+      (parseFloat(req.body.get("longitude"))).toFixed(5) : 8.39343;
   var hashTag = req.body.has("hashtag") ? req.body.get("hashtag") : "";
 
   var geoTag = new GeoTag(name, latitude, longitude, hashTag);
   geoTagStore.addGeoTag(geoTag);
+  var tags = geoTagStore.getNearbyGeoTags(latitude, longitude, 20);
 
-  res.render('index', geoTagStore.getNearbyGeoTags(latitude, longitude, 20));
+  res.render('index', {
+    tags, latitude: latitude, longitude: longitude
+  });
 });
 
 /**
@@ -103,10 +108,16 @@ router.post('/tagging', (req, res) => {
 
 router.post('/discovery', (req, res) => {
   var searchterm = req.body.has("searchterm") ? req.body.get("searchterm") : "";
-  var latitude = req.body.has("latitude") ? req.body.get("latitude") : "";
-  var longitude = req.body.has("longitude") ? req.body.get("longitude") : "";
+  var latitude = req.body.has("latitude") ?
+      (parseFloat(req.body.get("latitude"))).toFixed(5) : 49.01158;
+  var longitude = req.body.has("longitude") ?
+      (parseFloat(req.body.get("longitude"))).toFixed(5) : 8.39343;
 
-  res.render('index', geoTagStore.searchNearbyGeoTags(latitude, longitude, 20, searchterm));
+  var tags = geoTagStore.searchNearbyGeoTags(latitude, longitude, 20, searchterm);
+
+  res.render('index', {
+    tags, latitude: latitude, longitude: longitude
+  });
 });
 
 module.exports = router;

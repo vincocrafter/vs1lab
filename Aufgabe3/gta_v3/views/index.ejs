@@ -48,23 +48,23 @@
 				<label for="name">Name:</label>
 				<input type="text" id="name" name="name" maxlength="10" required />
 
-				<label for="tagLatitude">Latitude:</label>
-				<input
-						type="number"
-						id="tagLatitude"
-						name="latitude"
-						step="any"
-						value="49.01158"
-				/>
+						<label for="tagLatitude">Latitude:</label>
+						<input
+							type="number"
+							id="tagLatitude"
+							name="latitude"
+							step="any"
+							value="<%= latitude %>"
+						/>
 
-				<label for="tagLongitude">Longitude:</label>
-				<input
-						type="number"
-						id="tagLongitude"
-						name="longitude"
-						step="any"
-						value="8.39343"
-				/>
+						<label for="tagLongitude">Longitude:</label>
+						<input
+							type="number"
+							id="tagLongitude"
+							name="longitude"
+							step="any"
+							value="<%= longitude %>"
+						/>
 
 				<label for="tagHashtag">Hashtag:</label>
 				<input
@@ -96,27 +96,27 @@
 			<fieldset>
 				<legend>Search</legend>
 
-				<label for="discoverySearchterm">Search term or keywords</label>
-				<input
-						type="text"
-						id="discoverySearchterm"
-						name="searchterm"
-						placeholder="z.B. Castle"
-				/>
-				<!--  Absichtlich kein label und Platzhalter, da hidden input -->
-				<input
-						type="hidden"
-						id="discoveryLatitude"
-						name="latitude"
-						value="49.01379"
-				/>
-				<!--  Absichtlich kein label und platzhalter, da hidden input -->
-				<input
-						type="hidden"
-						id="discoveryLongitude"
-						name="longitude"
-						value="8.390071"
-				/>
+						<label for="discoverySearchterm">Search term or keywords</label>
+						<input
+							type="text"
+							id="discoverySearchterm"
+							name="searchterm"
+							placeholder="z.B. Castle"
+						/>
+						<!--  Absichtlich kein label und Platzhalter, da hidden input -->
+						<input
+							type="hidden"
+							id="discoveryLatitude"
+							name="latitude"
+							value="<%= latitude %>"
+						/>
+						<!--  Absichtlich kein label und platzhalter, da hidden input -->
+						<input
+							type="hidden"
+							id="discoveryLongitude"
+							name="longitude"
+							value="<%= longitude %>"
+						/>
 
 				<button type="submit">Search</button>
 			</fieldset>
