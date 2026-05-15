@@ -167,7 +167,6 @@ function updateLocation() {
         const listTags = JSON.parse(document.getElementById("map").dataset.tags);
 
         mapManager.initMap(lat, long);
-        mapManager.updateMarkers(lat, long, listTags);
 
         document.getElementById("mapView").remove();
         document.getElementById("map").querySelector("span").remove();
