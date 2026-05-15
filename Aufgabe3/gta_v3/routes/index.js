@@ -30,6 +30,7 @@ const GeoTag = require('../models/geotag');
  */
 // eslint-disable-next-line no-unused-vars
 const GeoTagStore = require('../models/geotag-store');
+const geoTagStore = new GeoTagStore();
 
 const GeoTagExamples = require('../models/geotag-examples');
 
@@ -71,6 +72,19 @@ router.get('/', (req, res) => {
  */
 
 // TODO: ... your code here ...
+
+router.post('/tagging', (req, res) => {
+
+  var name = req.body.has("name") ? req.body.get("name") : "";
+  var latitude = req.body.has("latitude") ? req.body.get("latitude") : "";
+  var longitude = req.body.has("longitude") ? req.body.get("longitude") : "";
+  var hashTag = req.body.has("hashtag") ? req.body.get("hashtag") : "";
+
+  var geoTag = new GeoTag(name, latitude, longitude, hashTag);
+  geoTagStore.addGeoTag(geoTag);
+
+  res.render('index', geoTagStore.getNearbyGeoTags(latitude, longitude, 15));
+});
 
 /**
  * Route '/discovery' for HTTP 'POST' requests.
