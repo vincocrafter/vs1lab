@@ -61,6 +61,73 @@ class InMemoryGeoTagStore {
         });
     }
 
+    /** @type {GeoTag[]} */
+    #geoTags = [];
+
+    constructor() {
+        this.#geoTags = GeoTagExamples.tagList.map(tag => new GeoTag(tag[0], tag[1], tag[2], tag[3]));
+    }
+
+    /**
+     * Add a geotag to the store
+     * @param {GeoTag} geoTag The tag to add
+     */
+     addGeoTag(geoTag) {
+        this.#geoTags.push(geoTag);
+    }
+
+    /**
+     * Remove a geo-tag from the store by name
+     * @param {string} geoTagName The name of the geo-tag to remove
+     */
+    removeGeoTag(geoTagName) {
+        for (const tag of this.#geoTags) {
+            if (tag.name === geoTagName) {
+                this.#geoTags.splice(this.#geoTags.indexOf(tag), 1);
+            }
+        }
+    }
+
+    /**
+     * Get all geotags in the proximity of a location.
+     * @param {int} locationLat Latitude of the location
+     * @param {int} locationLong Longitude of the location
+     * @param {int} distance Proximity around the location.
+     * @return {GeoTag[]} Array of GeoTags found.
+     */
+    getNearbyGeoTags(locationLat, locationLong, distance) {
+        var nearbyGeoTags = [];
+        for (const tag of this.#geoTags) {
+             const deltaLat = tag.latitude - locationLat;
+             const deltaLong = tag.longitude - locationLong;
+             const distToTag = Math.sqrt(deltaLat * deltaLat + deltaLong * deltaLong);
+
+             if (distToTag <= distance) {
+                 nearbyGeoTags.push(tag);
+             }
+        }
+
+        return nearbyGeoTags;
+    }
+
+    /**
+     * Search for geotags in the proximity of a location that match a keyword.
+     * @param {string} keyword Keyword to search for in name and hashtag fields of geotags
+     * @param {int} distance Proximity around the location.
+     * @return {GeoTag[]} Array of GeoTags found.
+     */
+    searchNearbyGeoTags(keyword, distance) {
+        var nearbyGeoTags = [];
+        for (const tag of this.#geoTags) {
+            if (tag.name.contains(keyword) || tag.hashTag.contains(keyword)) {
+                nearbyGeoTags.push(this.getNearbyGeoTags(tag.latitude, tag.longitude, distance));
+            }
+        }
+
+        return nearbyGeoTags;
+    }
+
+
 }
 
 module.exports = InMemoryGeoTagStore
