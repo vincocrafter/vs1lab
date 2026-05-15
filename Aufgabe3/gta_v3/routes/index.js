@@ -61,7 +61,6 @@ GeoTagExamples.tagList.forEach(([name, latitude, longitude, hashtag]) => {
  * As response, the ejs-template is rendered without geotag objects.
  */
 
-// TODO: extend the following route example if necessary
 router.get('/', (req, res) => {
   res.render('index', {
     taglist: [], latitude: 49.01158, longitude: 8.39343 // Standardwerte
