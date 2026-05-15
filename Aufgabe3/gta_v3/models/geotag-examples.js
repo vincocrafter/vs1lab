@@ -9,7 +9,9 @@
  * A class representing example geoTags at HKA
  * 
  * TODO: populate your InMemoryGeoTagStore with these tags
- * 
+ *
+ * See geotag-store.js -> Line 35
+ *
  */
 class GeoTagExamples {
     /**
