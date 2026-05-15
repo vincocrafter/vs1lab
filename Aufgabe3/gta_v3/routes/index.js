@@ -31,6 +31,16 @@ const GeoTag = require('../models/geotag');
 // eslint-disable-next-line no-unused-vars
 const GeoTagStore = require('../models/geotag-store');
 
+const GeoTagExamples = require('../models/geotag-examples');
+
+const store = new GeoTagStore();
+
+// Beispieldaten in Store laden
+GeoTagExamples.tagList.forEach(([name, latitude, longitude, hashtag]) => {
+  store.addGeoTag(new GeoTag(name, latitude, longitude, hashtag));
+});
+
+
 /**
  * Route '/' for HTTP 'GET' requests.
  * (http://expressjs.com/de/4x/api.html#app.get.method)
