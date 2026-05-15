@@ -74,7 +74,6 @@ router.get('/', (req, res) => {
 // TODO: ... your code here ...
 
 router.post('/tagging', (req, res) => {
-
   var name = req.body.has("name") ? req.body.get("name") : "";
   var latitude = req.body.has("latitude") ? req.body.get("latitude") : "";
   var longitude = req.body.has("longitude") ? req.body.get("longitude") : "";
@@ -83,7 +82,7 @@ router.post('/tagging', (req, res) => {
   var geoTag = new GeoTag(name, latitude, longitude, hashTag);
   geoTagStore.addGeoTag(geoTag);
 
-  res.render('index', geoTagStore.getNearbyGeoTags(latitude, longitude, 15));
+  res.render('index', geoTagStore.getNearbyGeoTags(latitude, longitude, 20));
 });
 
 /**
@@ -102,6 +101,12 @@ router.post('/tagging', (req, res) => {
  * by radius and keyword.
  */
 
-// TODO: ... your code here ...
+router.post('/discovery', (req, res) => {
+  var searchterm = req.body.has("searchterm") ? req.body.get("searchterm") : "";
+  var latitude = req.body.has("latitude") ? req.body.get("latitude") : "";
+  var longitude = req.body.has("longitude") ? req.body.get("longitude") : "";
+
+  res.render('index', geoTagStore.searchNearbyGeoTags(latitude, longitude, 20, searchterm));
+});
 
 module.exports = router;
