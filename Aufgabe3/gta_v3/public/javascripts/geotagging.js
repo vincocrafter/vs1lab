@@ -4,9 +4,10 @@
 
 // This script is executed when the browser loads index.html.
 
-// "console.log" writes to the browser's console. 
+// "console.log" writes to the browser's console.
 // The console window must be opened explicitly in the browser.
 // Try to find this output in the browser...
+
 console.log("The geoTagging script is going to start...");
 
 // Here the API used for geolocations is selected
@@ -32,9 +33,10 @@ var GEOLOCATION_API = {
 // If there are problems with it, comment out the line.
 GEOLOCATION_API = navigator.geolocation;
 
+
 /**
-  * A class to help using the HTML5 Geolocation API.
-  */
+ * A class to help using the HTML5 Geolocation API.
+ */
 class LocationHelper {
     // Location values for latitude and longitude are private properties to protect them from changes.
     #latitude = '';
@@ -54,8 +56,8 @@ class LocationHelper {
 
     /**
      * Create LocationHelper instance if coordinates are known.
-     * @param {string} latitude 
-     * @param {string} longitude 
+     * @param {string} latitude
+     * @param {string} longitude
      */
     constructor(latitude, longitude) {
         this.#latitude = (parseFloat(latitude)).toFixed(5);
@@ -100,28 +102,28 @@ class MapManager {
     #markers
 
     /**
-    * Initialize a Leaflet map
-    * @param {number} latitude The map center latitude
-    * @param {number} longitude The map center longitude
-    * @param {number} zoom The map zoom, defaults to 18
-    */
+     * Initialize a Leaflet map
+     * @param {number} latitude The map center latitude
+     * @param {number} longitude The map center longitude
+     * @param {number} zoom The map zoom, defaults to 18
+     */
     initMap(latitude, longitude, zoom = 18) {
         // set up dynamic Leaflet map
         this.#map = L.map('map').setView([latitude, longitude], zoom);
         var mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
             'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; ' + mapLink + ' Contributors'
-        }).addTo(this.#map);
+                attribution: '&copy; ' + mapLink + ' Contributors'
+            }).addTo(this.#map);
         this.#markers = L.layerGroup().addTo(this.#map);
     }
 
     /**
-    * Update the Markers of a Leaflet map
-    * @param {number} latitude The map center latitude
-    * @param {number} longitude The map center longitude
-    * @param {{latitude, longitude, name}[]} tags The map tags, defaults to just the current location
-    */
+     * Update the Markers of a Leaflet map
+     * @param {number} latitude The map center latitude
+     * @param {number} longitude The map center longitude
+     * @param {{latitude, longitude, name}[]} tags The map tags, defaults to just the current location
+     */
     updateMarkers(latitude, longitude, tags = []) {
         // delete all markers
         this.#markers.clearLayers();
@@ -137,7 +139,18 @@ class MapManager {
 }
 
 function updateLocation() {
-    // Position via findLocation auslesen 
+
+    /* Prüfe ob beide Werte der Koordinaten nicht NULL sind,
+     * d.h. die findLocation Methode wird nur ausgeführt wenn einer der Werte Null ist.
+     * Dass das prüfen beider Werte bei im allgemeinen gleichzeitigen setzten der Werte retundant ist wird per
+     * Kurzschlussauswertung umgangen.
+     */
+    if (document.getElementById("tagLatitude") != null
+        && document.getElementById("tagLongitude") != null) {
+        return;
+    }
+
+    // Position via findLocation auslesen
     LocationHelper.findLocation((locationHelper) => {
         // Wird dann ausgeführt sobald Location bekannt ist
         // LocationHelper hat dann diese 2 Werte, die in die jeweiligen Felder der HTML-Seite eingetragen werden können
@@ -151,15 +164,20 @@ function updateLocation() {
         document.getElementById("discoveryLatitude").value = lat;
         document.getElementById("discoveryLongitude").value = long;
 
+        const listTags = JSON.parse(document.getElementById("map").dataset.tags);
+
         mapManager.initMap(lat, long);
-        mapManager.updateMarkers(lat, long);
+        mapManager.updateMarkers(lat, long, listTags);
 
         document.getElementById("mapView").remove();
         document.getElementById("map").querySelector("span").remove();
+
     });
 }
 
 // Wait for the page to fully load its DOM content, then call updateLocation
 document.addEventListener("DOMContentLoaded", () => {
+
+
     updateLocation();
 });
