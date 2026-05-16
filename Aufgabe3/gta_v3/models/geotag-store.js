@@ -82,6 +82,11 @@ class InMemoryGeoTagStore {
                 || geotag.hashtag.toLowerCase().includes(term);
         });
     }
+    //Gibt alle GeoTags als JSON zurück.
+    getAllGeoTagsAsJson(){
+        return JSON.stringify(this.#geoTagStore);
+    }
+
 }
 
 module.exports = InMemoryGeoTagStore
