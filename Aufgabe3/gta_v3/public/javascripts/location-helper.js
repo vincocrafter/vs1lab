@@ -4,6 +4,9 @@
  * A class to help using the HTML5 Geolocation API.
  */
 // eslint-disable-next-line no-unused-vars
+/**
+ * A class to help using the HTML5 Geolocation API.
+ */
 class LocationHelper {
     // Location values for latitude and longitude are private properties to protect them from changes.
     #latitude = '';
@@ -23,8 +26,8 @@ class LocationHelper {
 
     /**
      * Create LocationHelper instance if coordinates are known.
-     * @param {string} latitude 
-     * @param {string} longitude 
+     * @param {string} latitude
+     * @param {string} longitude
      */
     constructor(latitude, longitude) {
         this.#latitude = (parseFloat(latitude)).toFixed(5);
@@ -38,11 +41,12 @@ class LocationHelper {
      * @param {*} callback a function that will be called with a LocationHelper instance as parameter, that has the current location details
      */
     static findLocation(callback) {
-        const geoLocationApi = navigator.geolocation
+        const geoLocationApi = GEOLOCATION_API;
 
         if (!geoLocationApi) {
             throw new Error("The GeoLocation API is unavailable.");
         }
+
         // Call to the HTML5 geolocation API.
         // Takes a first callback function as argument that is called in case of success.
         // Second callback is optional for handling errors.
@@ -50,6 +54,7 @@ class LocationHelper {
         geoLocationApi.getCurrentPosition((location) => {
             // Create and initialize LocationHelper object.
             let helper = new LocationHelper(location.coords.latitude, location.coords.longitude);
+
             // Pass the locationHelper object to the callback.
             callback(helper);
         }, (error) => {
