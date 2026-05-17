@@ -29,6 +29,9 @@ class InMemoryGeoTagStore {
 
     addGeoTag(geotag) {
         this.#geoTagStore.push(geotag);
+
+        //Speichert die veränderten Daten im dataset.
+        document.getElementById("map").dataset.tags = JSON.stringify(this.#geoTagStore);
     }
 
     removeGeoTag(name) {
@@ -55,10 +58,6 @@ class InMemoryGeoTagStore {
             return geotag.name.toLowerCase().includes(term)
                 || geotag.hashtag.toLowerCase().includes(term);
         });
-    }
-    //Gibt alle GeoTags als JSON zurück.
-    getAllGeoTagsAsJson(){
-        return JSON.stringify(this.#geoTagStore);
     }
 
 }

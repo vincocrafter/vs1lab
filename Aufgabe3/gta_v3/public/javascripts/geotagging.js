@@ -32,16 +32,10 @@ var GEOLOCATION_API = {
 // This is the real API.
 // If there are problems with it, comment out the line.
 GEOLOCATION_API = navigator.geolocation;
-
+var hasCheckedCoordinates = false;
 function updateLocation() {
 
-    /* Prüfe ob beide Werte der Koordinaten nicht NULL sind,
-     * d.h. die findLocation Methode wird nur ausgeführt wenn einer der Werte Null ist.
-     * Dass das prüfen beider Werte bei im allgemeinen gleichzeitigen setzten der Werte retundant ist wird per
-     * Kurzschlussauswertung umgangen.
-     */
-    if (document.getElementById("tagLatitude") != null
-        && document.getElementById("tagLongitude") != null) {
+    if (hasCheckedCoordinates) {
         return;
     }
 
@@ -66,6 +60,8 @@ function updateLocation() {
 
         document.getElementById("mapView").remove();
         document.getElementById("map").querySelector("span").remove();
+
+        hasCheckedCoordinates = true;
 
     });
 }
