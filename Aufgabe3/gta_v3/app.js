@@ -36,13 +36,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-/**
- * VS1LAB:
- * Configure path for static content.
- * Test the result in a browser here: 'http://localhost:3000/'.
- */
+app.use(express.static(path.join(__dirname, 'public')));
 
-// TODO: ... your code here ...
 
 // Set dedicated script for routing
 app.use('/', indexRouter);

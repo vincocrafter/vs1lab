@@ -1,5 +1,6 @@
 // File origin: VS1LAB A3
-
+const GeoTag = require("./geotag.js");
+const GeoTagExamples = require("./geotag-examples.js");
 /**
  * This script is a template for exercise VS1lab/Aufgabe3
  * Complete all TODOs in the code documentation.
@@ -25,22 +26,37 @@
  */
 class InMemoryGeoTagStore {
 
+    /** @type {GeoTag[]} */
     #geoTagStore = []; // nur in Store
+
+    /**
+     * Add a geotag to the store
+     * @param {GeoTag} geoTag The tag to add
+     */
 
     addGeoTag(geotag) {
         this.#geoTagStore.push(geotag);
-
-        //Speichert die veränderten Daten im dataset.
-        document.getElementById("map").dataset.tags = JSON.stringify(this.#geoTagStore);
     }
+
+    /**
+     * Remove a geo-tag from the store by name
+     * @param {string} geoTagName The name of the geo-tag to remove
+     */
 
     removeGeoTag(name) {
         this.#geoTagStore = this.#geoTagStore.filter(geotag => geotag.name !== name);
     }
+    /**
+     * Get all geotags in the proximity of a location.
+     * @param {int} latitude Latitude of the location
+     * @param {int} longitude Longitude of the location
+     * @param {int} radius Proximity around the location.
+     * @return {GeoTag[]} Array of GeoTags found.
+     */
 
-    getNearbyGeoTags(location, radius) {
+    getNearbyGeoTags(latitude, longitude, radius) {
         return this.#geoTagStore.filter(geotag => {
-            const distance = this.calculateDistance(location.latitude, location.longitude, geotag.latitude, geotag.longitude);
+            const distance = this.calculateDistance(latitude, longitude, geotag.latitude, geotag.longitude);
             return distance <= radius;
         });
     }
@@ -51,15 +67,21 @@ class InMemoryGeoTagStore {
         return Math.sqrt(dLat * dLat + dLon * dLon);
     }
 
+    /**
+     * Search for geotags in the proximity of a location that match a keyword.
+     * @param {string} keyword Keyword to search for in name and hashtag fields of geotags
+     * @param {int} distance Proximity around the location.
+     * @return {GeoTag[]} Array of GeoTags found.
+     */
 
-    searchNearbyGeoTags(location, radius, keyword) {
+
+    searchNearbyGeoTags(latitude, longitude, radius, keyword) {
         const term = keyword.toLowerCase();
-        return this.getNearbyGeoTags(location, radius).filter(geotag => {
+        return this.getNearbyGeoTags(latitude, longitude, radius).filter(geotag => {
             return geotag.name.toLowerCase().includes(term)
                 || geotag.hashtag.toLowerCase().includes(term);
         });
     }
-
 }
 
 module.exports = InMemoryGeoTagStore

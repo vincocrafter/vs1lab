@@ -201,9 +201,9 @@ fieldset button {
 	height: auto;
 }
 
-/* ### TODO ### Styles for Footer Component */
-
-/* ... your code here ... */
+#map {
+	height: 500px;
+}
 
 .footer {
 	padding-top: calc(2% - 1rem);

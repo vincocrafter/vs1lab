@@ -32,38 +32,40 @@ var GEOLOCATION_API = {
 // This is the real API.
 // If there are problems with it, comment out the line.
 GEOLOCATION_API = navigator.geolocation;
-var hasCheckedCoordinates = false;
+
 function updateLocation() {
+    const latField = document.getElementById("tagLatitude");
+    const lonField = document.getElementById("tagLongitude");
 
-    if (hasCheckedCoordinates) {
-        return;
+    if (latField.value && lonField.value) {
+        // Koordinaten kommen schon aus dem Formular (Server-Echo nach Submit)
+        // → Geolocation überspringen
+        initMapAndMarkers(parseFloat(latField.value), parseFloat(lonField.value));
+    } else {
+        // Felder sind leer (Erstaufruf) → Geolocation API fragen
+        LocationHelper.findLocation((locationHelper) => {
+            const lat = locationHelper.latitude;
+            const lon = locationHelper.longitude;
+
+            document.getElementById("tagLatitude").value = lat;
+            document.getElementById("tagLongitude").value = lon;
+            document.getElementById("discoveryLatitude").value = lat;
+            document.getElementById("discoveryLongitude").value = lon;
+
+            initMapAndMarkers(parseFloat(lat), parseFloat(lon));
+        });
     }
+}
 
-    // Position via findLocation auslesen
-    LocationHelper.findLocation((locationHelper) => {
-        // Wird dann ausgeführt sobald Location bekannt ist
-        // LocationHelper hat dann diese 2 Werte, die in die jeweiligen Felder der HTML-Seite eingetragen werden können
-        var lat = locationHelper.latitude;
-        var long = locationHelper.longitude;
-        let mapManager = new MapManager();
+function initMapAndMarkers(lat, lon) {
+    const mapManager = new MapManager();
+    const listTags = JSON.parse(document.getElementById("map").dataset.tags || "[]");
 
-        document.getElementById("tagLatitude").value = lat;
-        document.getElementById("tagLongitude").value = long;
+    mapManager.initMap(lat, lon);
+    mapManager.updateMarkers(lat, lon, listTags);
 
-        document.getElementById("discoveryLatitude").value = lat;
-        document.getElementById("discoveryLongitude").value = long;
-
-        const listTags = JSON.parse(document.getElementById("map").dataset.tags);
-
-        mapManager.initMap(lat, long);
-        mapManager.updateMarkers(lat, long, listTags);
-
-        document.getElementById("mapView").remove();
-        document.getElementById("map").querySelector("span").remove();
-
-        hasCheckedCoordinates = true;
-
-    });
+    document.getElementById("mapView")?.remove();
+    document.getElementById("map").querySelector("span")?.remove();
 }
 
 // Wait for the page to fully load its DOM content, then call updateLocation

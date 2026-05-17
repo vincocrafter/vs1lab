@@ -30,8 +30,9 @@ const GeoTag = require('../models/geotag');
  */
 // eslint-disable-next-line no-unused-vars
 const GeoTagStore = require('../models/geotag-store');
-
 const GeoTagExamples = require('../models/geotag-examples');
+
+const SEARCH_RADIUS = 0.1;
 
 const store = new GeoTagStore();
 
@@ -50,9 +51,12 @@ GeoTagExamples.tagList.forEach(([name, latitude, longitude, hashtag]) => {
  * As response, the ejs-template is rendered without geotag objects.
  */
 
-// TODO: extend the following route example if necessary
 router.get('/', (req, res) => {
-  res.render('index', { taglist: [] })
+  res.render('index', {
+    taglist: [],
+    latitude: '',
+    longitude: ''
+  });
 });
 
 /**
@@ -70,7 +74,23 @@ router.get('/', (req, res) => {
  * by radius around a given location.
  */
 
-// TODO: ... your code here ...
+
+router.post('/tagging', (req, res) => {
+  var name = req.body.name ? req.body.name : "";
+  var latitude = req.body.latitude ?
+    (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
+  var longitude = req.body.longitude ?
+    (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
+  var hashTag = req.body.hashtag ? req.body.hashtag : "";
+
+  var geoTag = new GeoTag(name, latitude, longitude, hashTag);
+  store.addGeoTag(geoTag);
+  var tags = store.getNearbyGeoTags(latitude, longitude, SEARCH_RADIUS);
+
+  res.render('index', {
+    taglist: tags, latitude: latitude, longitude: longitude
+  });
+});
 
 /**
  * Route '/discovery' for HTTP 'POST' requests.
@@ -88,6 +108,18 @@ router.get('/', (req, res) => {
  * by radius and keyword.
  */
 
-// TODO: ... your code here ...
+router.post('/discovery', (req, res) => {
+  var searchterm = req.body.searchterm ? req.body.searchterm : "";
+  var latitude = req.body.latitude ?
+    (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
+  var longitude = req.body.longitude ?
+    (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
+
+  var tags = store.searchNearbyGeoTags(latitude, longitude, SEARCH_RADIUS, searchterm);
+
+  res.render('index', {
+    taglist: tags, latitude: latitude, longitude: longitude
+  });
+});
 
 module.exports = router;
