@@ -53,7 +53,9 @@ GeoTagExamples.tagList.forEach(([name, latitude, longitude, hashtag]) => {
 
 router.get('/', (req, res) => {
   res.render('index', {
-    taglist: store.getNearbyGeoTags(49.01158, 8.39343, 20), latitude: 49.01158, longitude: 8.39343 // Standardwerte
+    taglist: [],
+    latitude: '',
+    longitude: ''
   });
 });
 
