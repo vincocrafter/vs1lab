@@ -55,7 +55,6 @@ class InMemoryGeoTagStore {
      */
 
     getNearbyGeoTags(latitude, longitude, radius) {
-    getNearbyGeoTags(latitude, longitude, radius) {
         return this.#geoTagStore.filter(geotag => {
             const distance = this.calculateDistance(latitude, longitude, geotag.latitude, geotag.longitude);
             return distance <= radius;
