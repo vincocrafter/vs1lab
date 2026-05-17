@@ -30,18 +30,6 @@ const GeoTag = require('../models/geotag');
  */
 // eslint-disable-next-line no-unused-vars
 const GeoTagStore = require('../models/geotag-store');
-const geoTagStore = new GeoTagStore();
-
-const GeoTagExamples = require('../models/geotag-examples');
-
-const store = new GeoTagStore();
-
-// Beispieldaten in Store laden
-GeoTagExamples.tagList.forEach(([name, latitude, longitude, hashtag]) => {
-  store.addGeoTag(new GeoTag(name, latitude, longitude, hashtag));
-});
-
-
 const GeoTagExamples = require('../models/geotag-examples');
 
 const store = new GeoTagStore();
@@ -63,7 +51,7 @@ GeoTagExamples.tagList.forEach(([name, latitude, longitude, hashtag]) => {
 
 router.get('/', (req, res) => {
   res.render('index', {
-    taglist: [], latitude: 49.01158, longitude: 8.39343 // Standardwerte
+    taglist: store.getNearbyGeoTags(49.01158, 8.39343, 20), latitude: 49.01158, longitude: 8.39343 // Standardwerte
   });
 });
 
@@ -84,19 +72,19 @@ router.get('/', (req, res) => {
 
 
 router.post('/tagging', (req, res) => {
-  var name = req.body.has("name") ? req.body.get("name") : "";
-  var latitude = req.body.has("latitude") ?
-      (parseFloat(req.body.get("latitude"))).toFixed(5) : 49.01158;
-  var longitude = req.body.has("longitude") ?
-      (parseFloat(req.body.get("longitude"))).toFixed(5) : 8.39343;
-  var hashTag = req.body.has("hashtag") ? req.body.get("hashtag") : "";
+  var name = req.body.name ? req.body.name : "";
+  var latitude = req.body.latitude ?
+      (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
+  var longitude = req.body.longitude ?
+      (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
+  var hashTag = req.body.hashtag ? req.body.hashtag : "";
 
   var geoTag = new GeoTag(name, latitude, longitude, hashTag);
-  geoTagStore.addGeoTag(geoTag);
-  var tags = geoTagStore.getNearbyGeoTags(latitude, longitude, 20);
+  store.addGeoTag(geoTag);
+  var tags = store.getNearbyGeoTags(latitude, longitude, 20);
 
   res.render('index', {
-    tags, latitude: latitude, longitude: longitude
+    taglist: tags, latitude: latitude, longitude: longitude
   });
 });
 
@@ -117,16 +105,16 @@ router.post('/tagging', (req, res) => {
  */
 
 router.post('/discovery', (req, res) => {
-  var searchterm = req.body.has("searchterm") ? req.body.get("searchterm") : "";
-  var latitude = req.body.has("latitude") ?
-      (parseFloat(req.body.get("latitude"))).toFixed(5) : 49.01158;
-  var longitude = req.body.has("longitude") ?
-      (parseFloat(req.body.get("longitude"))).toFixed(5) : 8.39343;
+  var searchterm = req.body.searchterm ? req.body.searchterm : "";
+  var latitude = req.body.latitude ?
+      (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
+  var longitude = req.body.longitude ?
+      (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
 
-  var tags = geoTagStore.searchNearbyGeoTags(latitude, longitude, 20, searchterm);
+  var tags = store.searchNearbyGeoTags(latitude, longitude, 20, searchterm);
 
   res.render('index', {
-    tags, latitude: latitude, longitude: longitude
+    taglist: tags, latitude: latitude, longitude: longitude
   });
 });
 
