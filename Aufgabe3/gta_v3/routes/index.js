@@ -32,6 +32,8 @@ const GeoTag = require('../models/geotag');
 const GeoTagStore = require('../models/geotag-store');
 const GeoTagExamples = require('../models/geotag-examples');
 
+const SEARCH_RADIUS = 0.1;
+
 const store = new GeoTagStore();
 
 // Beispieldaten in Store laden
@@ -74,14 +76,14 @@ router.get('/', (req, res) => {
 router.post('/tagging', (req, res) => {
   var name = req.body.name ? req.body.name : "";
   var latitude = req.body.latitude ?
-      (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
+    (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
   var longitude = req.body.longitude ?
-      (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
+    (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
   var hashTag = req.body.hashtag ? req.body.hashtag : "";
 
   var geoTag = new GeoTag(name, latitude, longitude, hashTag);
   store.addGeoTag(geoTag);
-  var tags = store.getNearbyGeoTags(latitude, longitude, 20);
+  var tags = store.getNearbyGeoTags(latitude, longitude, SEARCH_RADIUS);
 
   res.render('index', {
     taglist: tags, latitude: latitude, longitude: longitude
@@ -107,11 +109,11 @@ router.post('/tagging', (req, res) => {
 router.post('/discovery', (req, res) => {
   var searchterm = req.body.searchterm ? req.body.searchterm : "";
   var latitude = req.body.latitude ?
-      (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
+    (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
   var longitude = req.body.longitude ?
-      (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
+    (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
 
-  var tags = store.searchNearbyGeoTags(latitude, longitude, 20, searchterm);
+  var tags = store.searchNearbyGeoTags(latitude, longitude, SEARCH_RADIUS, searchterm);
 
   res.render('index', {
     taglist: tags, latitude: latitude, longitude: longitude
