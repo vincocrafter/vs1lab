@@ -44,6 +44,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // TODO: ... your code here ...
 
+app.listen(3000);
+
 // Set dedicated script for routing
 app.use('/', indexRouter);
 
