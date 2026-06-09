@@ -1,6 +1,7 @@
 // File origin: VS1LAB A3
 const GeoTag = require("./geotag.js");
 const GeoTagExamples = require("./geotag-examples.js");
+const geo = require("ejs");
 /**
  * This script is a template for exercise VS1lab/Aufgabe3
  * Complete all TODOs in the code documentation.
@@ -26,8 +27,9 @@ const GeoTagExamples = require("./geotag-examples.js");
  */
 class InMemoryGeoTagStore {
 
-    /** @type {GeoTag[]} */
-    #geoTagStore = []; // nur in Store
+    /** @type {Map<number, GeoTag>} */
+    #geoTagStore = new Map(); // nur in Store
+    #id = 0;
 
     /**
      * Add a geotag to the store
@@ -35,7 +37,9 @@ class InMemoryGeoTagStore {
      */
 
     addGeoTag(geotag) {
-        this.#geoTagStore.push(geotag);
+        const assignedId = this.#id++;
+        this.#geoTagStore.set(assignedId, geotag);
+        return assignedId;
     }
 
     /**
@@ -44,8 +48,18 @@ class InMemoryGeoTagStore {
      */
 
     removeGeoTag(name) {
-        this.#geoTagStore = this.#geoTagStore.filter(geotag => geotag.name !== name);
+        this.#geoTagStore.delete(this.#geoTagStore.findIndex(geotag => geotag.name === name));
     }
+
+    /**
+     * Remove a geo-tag from the id
+     * @param {string} geoTagName The name of the geo-tag to remove
+     */
+
+    removeGeoTag(id) {
+        this.#geoTagStore.delete(id);
+    }
+
     /**
      * Get all geotags in the proximity of a location.
      * @param {int} latitude Latitude of the location
@@ -55,7 +69,7 @@ class InMemoryGeoTagStore {
      */
 
     getNearbyGeoTags(latitude, longitude, radius) {
-        return this.#geoTagStore.filter(geotag => {
+        return Array.from(this.#geoTagStore.values()).filter(geotag => {
             const distance = this.calculateDistance(latitude, longitude, geotag.latitude, geotag.longitude);
             return distance <= radius;
         });
@@ -81,6 +95,14 @@ class InMemoryGeoTagStore {
             return geotag.name.toLowerCase().includes(term)
                 || geotag.hashtag.toLowerCase().includes(term);
         });
+    }
+
+    getGeoTagByID(id) {
+        return this.#geoTagStore.get(Number(id));
+    }
+
+    setGeoTag(geotag, id) {
+        this.#geoTagStore.set(Number(id), geotag);
     }
 }
 

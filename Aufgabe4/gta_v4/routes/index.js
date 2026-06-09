@@ -133,8 +133,17 @@ router.post('/discovery', (req, res) => {
  * If 'latitude' and 'longitude' are available, it will be further filtered based on radius.
  */
 
-// TODO: ... your code here ...
+router.get('/api/geotags', (req, res) => {
+  var searchterm = req.body.searchterm ? req.body.searchterm : "";
+  var latitude = req.body.latitude ?
+      (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
+  var longitude = req.body.longitude ?
+      (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
 
+  var tags = store.searchNearbyGeoTags(latitude, longitude, SEARCH_RADIUS, searchterm);
+
+  res.json(tags);
+});
 
 /**
  * Route '/api/geotags' for HTTP 'POST' requests.
@@ -147,8 +156,11 @@ router.post('/discovery', (req, res) => {
  * The new resource is rendered as JSON in the response.
  */
 
-// TODO: ... your code here ...
-
+router.post('/api/geotags', (req, res) => {
+  var id = store.addGeoTag(req.body);
+  res.header('URL', '/api/geotags/' + id);
+  res.status(201).json(store.getGeoTagByID(id));
+});
 
 /**
  * Route '/api/geotags/:id' for HTTP 'GET' requests.
@@ -160,7 +172,9 @@ router.post('/discovery', (req, res) => {
  * The requested tag is rendered as JSON in the response.
  */
 
-// TODO: ... your code here ...
+router.get('/api/geotags/:id', (req, res) => {
+  res.json(store.getGeoTagByID(req.params.id));
+});
 
 
 /**
@@ -177,7 +191,10 @@ router.post('/discovery', (req, res) => {
  * The updated resource is rendered as JSON in the response. 
  */
 
-// TODO: ... your code here ...
+router.put('/api/geotags/:id', (req, res) => {
+  store.setGeoTag(req.body, req.params.id);
+  res.json(store.getGeoTagByID(req.params.id));
+});
 
 
 /**
@@ -191,6 +208,11 @@ router.post('/discovery', (req, res) => {
  * The deleted resource is rendered as JSON in the response.
  */
 
-// TODO: ... your code here ...
+router.delete('/api/geotags/:id', (req, res) => {
+  var id = req.params.id ? req.params.id : 0;
+  var geotag = store.getGeoTagByID(id);
+  store.removeGeoTag(Number(id))
+  res.json(geotag);
+});
 
 module.exports = router;
