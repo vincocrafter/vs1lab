@@ -158,7 +158,7 @@ router.get('/api/geotags', (req, res) => {
 
 router.post('/api/geotags', (req, res) => {
   var id = store.addGeoTag(req.body);
-  res.header('URL', '/api/geotags/' + id);
+  res.header('Location', '/api/geotags/' + id);
   res.status(201).json(store.getGeoTagByID(id));
 });
 
