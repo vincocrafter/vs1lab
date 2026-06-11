@@ -32,6 +32,7 @@ class MapManager {
      * @param {{latitude, longitude, name}[]} tags The map tags, defaults to just the current location
      */
     updateMarkers(latitude, longitude, tags = []) {
+        this.#map.setView([latitude, longitude]);
         // delete all markers
         this.#markers.clearLayers();
         L.marker([latitude, longitude])
