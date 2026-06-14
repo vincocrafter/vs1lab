@@ -33,6 +33,7 @@ class InMemoryGeoTagStore {
 
     /**
      * Add a geotag to the store
+     *
      * @param {GeoTag} geoTag The tag to add
      */
 
