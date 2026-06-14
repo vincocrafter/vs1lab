@@ -29,6 +29,7 @@ const GeoTagStore = require('../models/geotag-store');
 const GeoTagExamples = require('../models/geotag-examples');
 
 const SEARCH_RADIUS = 0.1;
+const ResultsPerPage = 5;
 
 const store = new GeoTagStore();
 
@@ -84,8 +85,28 @@ router.post('/tagging', (req, res) => {
   store.addGeoTag(geoTag);
   var tags = store.getNearbyGeoTags(latitude, longitude, SEARCH_RADIUS);
 
+
+  var page = req.body.page ? parseInt(req.body.page) : 1;
+  var pageSize = req.body.pageSize ? parseInt(req.body.pageSize) : DEFAULT_PAGE_SIZE;
+
+  var totalCount = tags.length;
+  var totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  if (page < 1) page = 1;
+  if (page > totalPages) page = totalPages;
+
+  var start = (page - 1) * pageSize;
+  var displayTags = tags.slice(start, start + pageSize);
+
+
+
   res.render('index', {
-    taglist: tags, latitude: latitude, longitude: longitude
+    taglist: displayTags,
+    latitude: latitude,
+    longitude: longitude,
+    currentPage: page,
+    totalPages: totalPages,
+    totalCount: totalCount,
+    pageSize: pageSize
   });
 });
 
@@ -106,16 +127,36 @@ router.post('/tagging', (req, res) => {
  */
 
 router.post('/discovery', (req, res) => {
-  var searchterm = req.body.searchterm ? req.body.searchterm : "";
+  var searchTerm = req.body.searchTerm ? req.body.searchTerm : "";
   var latitude = req.body.latitude ?
       (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
   var longitude = req.body.longitude ?
       (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
 
-  var tags = store.searchNearbyGeoTags(latitude, longitude, SEARCH_RADIUS, searchterm);
+  var tags = store.searchNearbyGeoTags(latitude, longitude, SEARCH_RADIUS, searchTerm);
+
+
+  var page = req.body.page ? parseInt(req.body.page) : 1;
+  var pageSize = req.body.pageSize ? parseInt(req.body.pageSize) : DEFAULT_PAGE_SIZE;
+
+  var totalCount = tags.length;
+  var totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  if (page < 1) page = 1;
+  if (page > totalPages) page = totalPages;
+
+  var start = (page - 1) * pageSize;
+  var displayTags = tags.slice(start, start + pageSize);
+
+
 
   res.render('index', {
-    taglist: tags, latitude: latitude, longitude: longitude
+    taglist: displayTags,
+    latitude: latitude,
+    longitude: longitude,
+    currentPage: page,
+    totalPages: totalPages,
+    totalCount: totalCount,
+    pageSize: pageSize
   });
 });
 
