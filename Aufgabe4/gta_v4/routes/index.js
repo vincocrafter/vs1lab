@@ -134,11 +134,11 @@ router.post('/discovery', (req, res) => {
  */
 
 router.get('/api/geotags', (req, res) => {
-  var searchterm = req.body.searchterm ? req.body.searchterm : "";
-  var latitude = req.body.latitude ?
-      (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
-  var longitude = req.body.longitude ?
-      (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
+  var searchterm = req.query.searchterm ? req.query.searchterm : "";
+  var latitude = req.query.latitude ?
+      (parseFloat(req.query.latitude)).toFixed(5) : 49.01158;
+  var longitude = req.query.longitude ?
+      (parseFloat(req.query.longitude)).toFixed(5) : 8.39343;
 
   var tags = store.searchNearbyGeoTags(latitude, longitude, SEARCH_RADIUS, searchterm);
 
