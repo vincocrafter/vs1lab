@@ -14,14 +14,14 @@ const express = require('express');
 const router = express.Router();
 
 /**
- * The module "geotag" exports a class GeoTagStore. 
+ * The module "geotag" exports a class GeoTagStore.
  * It represents geotags.
  */
 // eslint-disable-next-line no-unused-vars
 const GeoTag = require('../models/geotag');
 
 /**
- * The module "geotag-store" exports a class GeoTagStore. 
+ * The module "geotag-store" exports a class GeoTagStore.
  * It provides an in-memory store for geotag objects.
  */
 // eslint-disable-next-line no-unused-vars
@@ -29,6 +29,7 @@ const GeoTagStore = require('../models/geotag-store');
 const GeoTagExamples = require('../models/geotag-examples');
 
 const SEARCH_RADIUS = 0.1;
+const ResultsPerPage = 5;
 
 const store = new GeoTagStore();
 
@@ -84,8 +85,28 @@ router.post('/tagging', (req, res) => {
   store.addGeoTag(geoTag);
   var tags = store.getNearbyGeoTags(latitude, longitude, SEARCH_RADIUS);
 
+
+  var page = req.body.page ? parseInt(req.body.page) : 1;
+  var pageSize = req.body.pageSize ? parseInt(req.body.pageSize) : DEFAULT_PAGE_SIZE;
+
+  var totalCount = tags.length;
+  var totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  if (page < 1) page = 1;
+  if (page > totalPages) page = totalPages;
+
+  var start = (page - 1) * pageSize;
+  var displayTags = tags.slice(start, start + pageSize);
+
+
+
   res.render('index', {
-    taglist: tags, latitude: latitude, longitude: longitude
+    taglist: displayTags,
+    latitude: latitude,
+    longitude: longitude,
+    currentPage: page,
+    totalPages: totalPages,
+    totalCount: totalCount,
+    pageSize: pageSize
   });
 });
 
@@ -106,16 +127,36 @@ router.post('/tagging', (req, res) => {
  */
 
 router.post('/discovery', (req, res) => {
-  var searchterm = req.body.searchterm ? req.body.searchterm : "";
+  var searchTerm = req.body.searchTerm ? req.body.searchTerm : "";
   var latitude = req.body.latitude ?
       (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
   var longitude = req.body.longitude ?
       (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
 
-  var tags = store.searchNearbyGeoTags(latitude, longitude, SEARCH_RADIUS, searchterm);
+  var tags = store.searchNearbyGeoTags(latitude, longitude, SEARCH_RADIUS, searchTerm);
+
+
+  var page = req.body.page ? parseInt(req.body.page) : 1;
+  var pageSize = req.body.pageSize ? parseInt(req.body.pageSize) : DEFAULT_PAGE_SIZE;
+
+  var totalCount = tags.length;
+  var totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  if (page < 1) page = 1;
+  if (page > totalPages) page = totalPages;
+
+  var start = (page - 1) * pageSize;
+  var displayTags = tags.slice(start, start + pageSize);
+
+
 
   res.render('index', {
-    taglist: tags, latitude: latitude, longitude: longitude
+    taglist: displayTags,
+    latitude: latitude,
+    longitude: longitude,
+    currentPage: page,
+    totalPages: totalPages,
+    totalCount: totalCount,
+    pageSize: pageSize
   });
 });
 
@@ -134,11 +175,11 @@ router.post('/discovery', (req, res) => {
  */
 
 router.get('/api/geotags', (req, res) => {
-  var searchterm = req.query.searchterm ? req.query.searchterm : "";
-  var latitude = req.query.latitude ?
-      (parseFloat(req.query.latitude)).toFixed(5) : 49.01158;
-  var longitude = req.query.longitude ?
-      (parseFloat(req.query.longitude)).toFixed(5) : 8.39343;
+  var searchterm = req.body.searchterm ? req.body.searchterm : "";
+  var latitude = req.body.latitude ?
+      (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
+  var longitude = req.body.longitude ?
+      (parseFloat(req.body.longitude)).toFixed(5) : 8.39343;
 
   var tags = store.searchNearbyGeoTags(latitude, longitude, SEARCH_RADIUS, searchterm);
 
@@ -183,12 +224,12 @@ router.get('/api/geotags/:id', (req, res) => {
  *
  * Requests contain the ID of a tag in the path.
  * (http://expressjs.com/de/4x/api.html#req.params)
- * 
+ *
  * Requests contain a GeoTag as JSON in the body.
  * (http://expressjs.com/de/4x/api.html#req.query)
  *
  * Changes the tag with the corresponding ID to the sent value.
- * The updated resource is rendered as JSON in the response. 
+ * The updated resource is rendered as JSON in the response.
  */
 
 router.put('/api/geotags/:id', (req, res) => {
