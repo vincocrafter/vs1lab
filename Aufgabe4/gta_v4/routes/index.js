@@ -131,7 +131,7 @@ router.post('/tagging', (req, res) => {
  */
 
 router.post('/discovery', (req, res) => {
-  var searchTerm = req.body.searchTerm ? req.body.searchTerm : "";
+  var searchTerm = req.query.searchterm ? req.query.searchterm : "";
   var latitude = req.body.latitude ?
       (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
   var longitude = req.body.longitude ?
@@ -179,7 +179,7 @@ router.post('/discovery', (req, res) => {
  */
 
 router.get('/api/geotags', (req, res) => {
-  var searchterm = req.body.searchterm ? req.body.searchterm : "";
+  var searchterm = req.query.searchterm ? req.query.searchterm : "";
   var latitude = req.body.latitude ?
       (parseFloat(req.body.latitude)).toFixed(5) : 49.01158;
   var longitude = req.body.longitude ?
