@@ -28,8 +28,8 @@ const GeoTag = require('../models/geotag');
 const GeoTagStore = require('../models/geotag-store');
 const GeoTagExamples = require('../models/geotag-examples');
 
-const SEARCH_RADIUS = 0.1;
-const ResultsPerPage = 5;
+const SEARCH_RADIUS = 99;
+const DEFAULT_PAGE_SIZE = 5;
 
 const store = new GeoTagStore();
 
@@ -53,7 +53,11 @@ router.get('/', (req, res) => {
   res.render('index', {
     taglist: [],
     latitude: '',
-    longitude: ''
+    longitude: '',
+    currentPage: 1,
+    totalPages: 1,
+    totalCount: 0,
+    pageSize: DEFAULT_PAGE_SIZE
   });
 });
 

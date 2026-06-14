@@ -174,7 +174,7 @@ function registerDiscoveryForm() {
         }
 
         const { latitude, longitude } = getDiscoveryLocation();
-        const searchterm = document.getElementById("discoverySearchterm").value;
+        const searchterm = document.getElementById("discoverySearchTerm").value;
         const tags = await fetchDiscoveryResults(latitude, longitude, searchterm);
         updateDiscoveryWidget(tags, latitude, longitude);
     });

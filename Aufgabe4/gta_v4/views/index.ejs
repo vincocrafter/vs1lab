@@ -124,26 +124,26 @@
 				<input type="hidden"
 				       id="discoveryPage"
 				       name="page"
-				       value="<%= cp %>" />
+				       value="<%= currentPage %>" />
 				<input type="hidden"
 				       name="pageSize"
-				       value="<%= pageSize ? pageSize : 5 %>" />
+				       value="<%= pageSize %>" />
 
 				<button type="submit">Search</button>
 				<!-- Pagination controls -->
 				<div class="pagination">
 					<button type="submit"
 					        name="page"
-					        value="<%= Math.max(cp - 1, 1) %>" <%= cp <= 1 ? 'disabled' : '' %>
+					        value="<%= Math.max(currentPage - 1, 1) %>" <%= currentPage <= 1 ? 'disabled' : '' %>
 					>Zurück</button>
 
 					<span>
-                        Seite <%= cp %> von <%= tp %> (Einträge: <%= tc %>)
+                        Seite <%= currentPage %> von <%= totalPages %> (Einträge: <%= totalCount %>)
                         </span>
 
 					<button type="submit"
 					        name="page"
-					        value="<%= Math.min(cp + 1, tp) %>" <%= cp >= tp ? 'disabled' : '' %>
+					        value="<%= Math.min(currentPage + 1, totalPages) %>" <%= currentPage >= totalPages ? 'disabled' : '' %>
 					>Weiter</button>
 				</div>
 			</fieldset>
