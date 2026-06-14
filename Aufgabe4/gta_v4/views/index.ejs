@@ -93,17 +93,16 @@
 				action="/discovery"
 				method="post"
 		>
-
 			<!-- ... your code here ... -->
 
 			<fieldset>
 				<legend>Search</legend>
 
-						<label for="discoverySearchTerm">Search term or keywords</label>
+						<label for="discoverySearchterm">Search term or keywords</label>
 						<input
 							type="text"
-							id="discoverySearchTerm"
-							name="searchTerm"
+							id="discoverySearchterm"
+							name="searchterm"
 							placeholder="z.B. Castle"
 						/>
 						<!--  Absichtlich kein label und Platzhalter, da hidden input -->
@@ -120,32 +119,8 @@
 							name="longitude"
 							value="<%= longitude %>"
 						/>
-						<!-- Hidden inputs to keep pagination state -->
-						<input type="hidden"
-						    id="discoveryPage"
-						    name="page"
-						    value="<%= cp %>" />
-						<input type="hidden"
-						    name="pageSize"
-						    value="<%= pageSize ? pageSize : 5 %>" />
 
 				<button type="submit">Search</button>
-				<!-- Pagination controls -->
-                <div class="pagination">
-                    <button type="submit"
-                        name="page"
-                        value="<%= Math.max(cp - 1, 1) %>" <%= cp <= 1 ? 'disabled' : '' %>
-                        >Zurück</button>
-
-                	<span>
-                        Seite <%= cp %> von <%= tp %> (Einträge: <%= tc %>)
-                        </span>
-
-                	<button type="submit"
-                	    name="page"
-                	    value="<%= Math.min(cp + 1, tp) %>" <%= cp >= tp ? 'disabled' : '' %>
-                		>Weiter</button>
-                </div>
 			</fieldset>
 		</form>
 		<!-- ############### VS1Lab 1a Form 2 End -->
@@ -153,8 +128,7 @@
 		<div class="discovery__wrapper row">
 			<div class="discovery__taglist col-4">
 				<ul class="discovery__results" id="discoveryResults">
-					<% if (taglist !== undefined)
-					taglist.forEach(function(gtag) { %>
+					<% if (taglist !== undefined) taglist.forEach(function(gtag) { %>
 						<li><%= gtag.name %> ( <%= gtag.latitude %>,<%= gtag.longitude %>) <%= gtag.hashtag %> </li>
 					<% }); %>
 				</ul>

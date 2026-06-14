@@ -74,6 +74,7 @@ class InMemoryGeoTagStore {
             return distance <= radius;
         });
     }
+
     calculateDistance(lat1, lon1, lat2, lon2) {
         const dLat = lat1 - lat2;
         const dLon = lon1 - lon2;
